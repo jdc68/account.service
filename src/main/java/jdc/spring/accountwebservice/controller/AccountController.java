@@ -5,6 +5,7 @@ import jdc.spring.accountwebservice.model.Account;
 import jdc.spring.accountwebservice.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/api")
 public class AccountController {
     @Autowired
@@ -24,11 +25,9 @@ public class AccountController {
     }
 
     public ResponseEntity<Account> getAccountById(@PathVariable(value = "id") Long accountId)
-        throws ResourceNotFoundException {
+            throws ResourceNotFoundException {
         Account account = accountRepository.findById(accountId)
-            .orElseThrow(() -> new ResourceNotFoundException("Account not found for this id : " + accountId));
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found for this id : " + accountId));
         return ResponseEntity.ok().body(account);
     }
-
-
 }
