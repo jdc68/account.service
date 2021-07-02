@@ -1,33 +1,29 @@
 package jdc.spring.accountwebservice.controller;
 
-import jdc.spring.accountwebservice.exception.ResourceNotFoundException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jdc.spring.accountwebservice.model.Account;
 import jdc.spring.accountwebservice.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Controller
+@Tag(name="Accounts", description = "Account access")
+@RestController
 @RequestMapping("/api")
 public class AccountController {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Operation(
+            summary = "Fetch Accounts",
+            description = "Returns the list of all existing accounts"
+    )
     @GetMapping("/accounts")
-    public List<Account> getAllAccounts() {
-        return accountRepository.findAll();
-    }
-
-    public ResponseEntity<Account> getAccountById(@PathVariable(value = "id") Long accountId)
-            throws ResourceNotFoundException {
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new ResourceNotFoundException("Account not found for this id : " + accountId));
-        return ResponseEntity.ok().body(account);
+    public Account[] getAllAccounts() {
+        return accountRepository.getAccounts();
     }
 }

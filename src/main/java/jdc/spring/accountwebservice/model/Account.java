@@ -1,28 +1,38 @@
 package jdc.spring.accountwebservice.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-
+@Schema(description = "Account Entity")
 @Entity
 @Table(name = "accounts")
 @NamedStoredProcedureQuery(name = "getAllAccounts",
         procedureName = "GET_ACCOUNTS")
 public class Account {
+    @Schema(description = "Account ID", accessMode = Schema.AccessMode.READ_ONLY)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Schema(description = "Account numeric name", example = "0001")
     private String name;
+
+    @Schema(description = "Remaining balance for current account")
     private Float balance;
-    private Currency currency;
+
+    @Schema(description = "Account currency: 1 - USD; 2 - EUR; 3 - MDL")
+    private int currency;
+
+    @Schema(description = "Date and time of the last transaction")
     private LocalDateTime transactionTime;
 
     public Account() {
 
     }
 
-    public Account(Long id, String name, Float balance, Currency currency, LocalDateTime transactionTime) {
+    public Account(Long id, String name, Float balance, int currency, LocalDateTime transactionTime) {
         this.id = id;
         this.name = name;
         this.balance = balance;
@@ -56,11 +66,11 @@ public class Account {
     }
 
     @Column(name = "currencyId", nullable = false)
-    public Currency getCurrency() {
+    public int getCurrency() {
         return currency;
     }
 
-    public void setCurrency(Currency currency) {
+    public void setCurrency(int currency) {
         this.currency = currency;
     }
 

@@ -1,18 +1,18 @@
-DROP TABLE IF EXISTS Accounts;
+DROP TABLE IF EXISTS accounts;
 DROP TABLE IF EXISTS Currencies;
 
 CREATE TABLE Currencies(
-   id INT PRIMARY KEY IDENTITY,
-   currency VARCHAR(50) NOT NULL UNIQUE,
+    id INT PRIMARY KEY IDENTITY,
+    currency VARCHAR(50) NOT NULL UNIQUE,
 );
 
-CREATE TABLE Accounts (
+CREATE TABLE accounts (
 
-    id INT PRIMARY KEY IDENTITY,
-    accountName VARCHAR(50) NOT NULL UNIQUE,
+    id BIGINT PRIMARY KEY IDENTITY,
+    name VARCHAR(50) NOT NULL UNIQUE,
     balance FLOAT NOT NULL,
-    currencyId INT NOT NULL REFERENCES Currencies(id),
-    time DATETIME NOT NULL
+    currency INT NOT NULL REFERENCES Currencies(id),
+    transaction_time DATETIME NOT NULL
 );
 
 SET ANSI_NULLS ON
