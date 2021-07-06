@@ -2,6 +2,8 @@ package jdc.spring.accountwebservice.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jdc.spring.accountwebservice.converter.AccountConverter;
+import jdc.spring.accountwebservice.dto.AccountDto;
 import jdc.spring.accountwebservice.model.Account;
 import jdc.spring.accountwebservice.repository.AccountRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @Tag(name="Accounts", description = "Account access")
 @Slf4j
 @RestController
@@ -25,6 +25,9 @@ public class AccountController {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    AccountConverter converter;
+
     Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     @Operation(
@@ -32,16 +35,15 @@ public class AccountController {
             description = "Returns the list of all existing accounts"
     )
     @GetMapping("/accounts")
-    public ResponseEntity<Account[]> getAllAccounts() {
+    public ResponseEntity<AccountDto[]> getAllAccounts() {
         try {
-            return ResponseEntity.ok(accountRepository.getAccounts());
+            Account[] accounts = accountRepository.getAccounts();
+
+            return ResponseEntity.ok(converter.entitiesToDtos(accounts));
         } catch(DataAccessException e) {
             String msg = "Unable to access data.";
-            logger.error(msg);
-            throw e;
+            logger.error(msg, e);
+            return ResponseEntity.status(500).build();
         }
     }
-//    public Account[] getAllAccounts() {
-//        return accountRepository.getAccounts();
-//    }
 }
