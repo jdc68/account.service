@@ -8,23 +8,32 @@ import java.time.LocalDateTime;
 @Schema(description = "Account Entity")
 @Entity
 @Table(name = "accounts")
+@SecondaryTable(name="currencies", pkJoinColumns = @PrimaryKeyJoinColumn(name="curr_id"))
 @NamedStoredProcedureQuery(name = "getAllAccounts",
         procedureName = "GET_ACCOUNTS")
 public class Account {
     @Schema(description = "Account ID", accessMode = Schema.AccessMode.READ_ONLY)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
+    @Column(name = "name", nullable = false)
     @Schema(description = "Account numeric name", example = "0001")
     private String name;
 
+    @Column(name = "balance", nullable = false)
     @Schema(description = "Remaining balance for current account")
     private Float balance;
 
-    @Schema(description = "Account currency: 1 - USD; 2 - EUR; 3 - MDL")
-    private int currency;
+    @Column(name = "currency_id", nullable = false)
+    @Schema(description = "Account currency ID: 1 - USD; 2 - EUR; 3 - MDL")
+    private int currency_id;
 
+    @Column(name = "currency", table="currencies", nullable = false)
+    @Schema(description = "Account currency")
+    private String currency;
+
+    @Column(name = "transaction_time", nullable = false)
     @Schema(description = "Date and time of the last transaction")
     private LocalDateTime transactionTime;
 
@@ -32,22 +41,22 @@ public class Account {
 
     }
 
-    public Account(Long id, String name, Float balance, int currency, LocalDateTime transactionTime) {
+    public Account(int id, String name, Float balance, int currency_id, String currency, LocalDateTime transactionTime) {
         this.id = id;
         this.name = name;
         this.balance = balance;
+        this.currency_id = currency_id;
         this.currency = currency;
         this.transactionTime = transactionTime;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    @Column(name = "accountName", nullable = false)
     public String getName() {
         return name;
     }
@@ -56,7 +65,6 @@ public class Account {
         this.name = name;
     }
 
-    @Column(name = "balance", nullable = false)
     public Float getBalance() {
         return balance;
     }
@@ -65,16 +73,22 @@ public class Account {
         this.balance = balance;
     }
 
-    @Column(name = "currencyId", nullable = false)
-    public int getCurrency() {
+    public int getCurrencyId() {
+        return currency_id;
+    }
+
+    public void setCurrencyId(int currency_id) {
+        this.currency_id = currency_id;
+    }
+
+    public String getCurrency() {
         return currency;
     }
 
-    public void setCurrency(int currency) {
+    public void setCurrency(String currency) {
         this.currency = currency;
     }
 
-    @Column(name = "time", nullable = false)
     public LocalDateTime getTransactionTime() {
         return transactionTime;
     }
@@ -82,6 +96,4 @@ public class Account {
     public void setTransactionTime(LocalDateTime transactionTime) {
         this.transactionTime = transactionTime;
     }
-
-
 }

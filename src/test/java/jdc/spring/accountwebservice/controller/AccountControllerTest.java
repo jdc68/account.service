@@ -20,7 +20,7 @@ public class AccountControllerTest {
 
     @Test
     public void getAllAccounts() {
-        Long idValue = 2L;
+        int idValue = 2;
 
         accounts.setId(idValue);
 
