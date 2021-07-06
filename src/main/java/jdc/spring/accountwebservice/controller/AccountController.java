@@ -4,8 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jdc.spring.accountwebservice.converter.AccountConverter;
 import jdc.spring.accountwebservice.dto.AccountDto;
-import jdc.spring.accountwebservice.model.Account;
 import jdc.spring.accountwebservice.repository.AccountRepository;
+import jdc.spring.accountwebservice.service.AccountServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +28,9 @@ public class AccountController {
     @Autowired
     AccountConverter converter;
 
+    @Autowired
+    AccountServiceImpl accountService;
+
     Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     @Operation(
@@ -37,9 +40,10 @@ public class AccountController {
     @GetMapping("/accounts")
     public ResponseEntity<AccountDto[]> getAllAccounts() {
         try {
-            Account[] accounts = accountRepository.getAccounts();
-
-            return ResponseEntity.ok(converter.entitiesToDtos(accounts));
+//            Account[] accounts = accountRepository.getAccounts();
+//
+//            return ResponseEntity.ok(converter.entitiesToDtos(accounts));
+            return ResponseEntity.ok(accountService.getAccounts());
         } catch(DataAccessException e) {
             String msg = "Unable to access data.";
             logger.error(msg, e);
